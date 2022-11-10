@@ -1,15 +1,13 @@
 const formEl = document.querySelector('.js-form');
-const userData = {};
+
 const LOCAL_STORAGE_KEY = 'Hello, User';
-console.log(formEl.elements);
+
 function initPage() {
   let memory = localStorage.getItem(LOCAL_STORAGE_KEY);
+
   if (memory) {
     memory = JSON.parse(memory);
     Object.entries(memory).forEach(([name, value]) => {
-      console.log(name);
-      console.log(value);
-
       formEl.elements[name].value = value;
     });
   }
@@ -18,12 +16,25 @@ function initPage() {
 initPage();
 
 function handleInput(event) {
-  userData[event.target.name] = event.target.value;
+  let savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
+  savedData = savedData ? JSON.parse(savedData) : {};
+
+  savedData[event.target.name] = event.target.value;
+
+  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(savedData));
+}
+function onSubmitForm(e) {
+  e.preventDefault();
+  const formData = new FormData(formEl);
+  const userData = {};
+  formData.forEach((value, name) => {
+    userData[name] = value;
+  });
   console.log(userData);
 
-  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(userData));
-
-  console.log(localStorage);
+  e.target.reset();
+  localStorage.removeItem(LOCAL_STORAGE_KEY);
 }
 
 formEl.addEventListener('input', handleInput);
+formEl.addEventListener('submit', onSubmitForm);
