@@ -10,26 +10,47 @@
   </head>
   <body>
     <div class="timer">
-      <div class="field">
-        <span class="value" data-days>00</span>
-        <span class="label">Days</span>
-        <canvas id="stockGraph" data-days width="0" height="0"></canvas>
+        <div class="timer__items">
+          <div class="timer__box">
+            <div class="timer__item js-timer__days" data-title="днів">00</div>
+            <canvas id="stockGraph" data-days width="200" height="200"></canvas>
+          </div>
+
+          <div class="timer__box">
+            <div class="timer__item js-timer__hours" data-title="годин">00</div>
+            <canvas
+              id="stockGraph"
+              data-hours
+              width="200"
+              height="200"
+            ></canvas>
+          </div>
+
+          <div class="timer__box">
+            <div class="timer__item js-timer__minutes" data-title="хвилин">
+              00
+            </div>
+            <canvas
+              id="stockGraph"
+              data-minutes
+              width="200"
+              height="200"
+            ></canvas>
+          </div>
+          <div class="timer__box">
+            <div class="timer__item js-timer__seconds" data-title="секунд">
+              00
+            </div>
+            <canvas
+              id="stockGraph"
+              data-seconds
+              width="200"
+              height="200"
+            ></canvas>
+          </div>
+        </div>
       </div>
-      <div class="field">
-        <span class="value" data-hours>00</span>
-        <span class="label">Hours</span>
-        <canvas id="stockGraph" data-hours width="0" height="0"> </canvas>
-      </div>
-      <div class="field">
-        <span class="value" data-minutes>00</span>
-        <span class="label">Minutes</span>
-        <canvas id="stockGraph" data-minutes width="0" height="0"> </canvas>
-      </div>
-      <div class="field">
-        <span class="value" data-seconds>00</span>
-        <span class="label">Seconds</span>
-        <canvas id="stockGraph" data-seconds width="0" height="0"> </canvas>
-      </div>
+      <audio src="./audio/timer.mp3"></audio>
     </div>
   </body>
 </html>
