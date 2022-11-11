@@ -23,7 +23,7 @@ const makePromise = framework => {
   return new Promise((resolve, reject) => {
     const delay = getRandomDelay();
     setTimeout(() => {
-      if (delay < 500) {
+      if (delay < 1500) {
         resolve({
           delay,
           framework,
@@ -60,7 +60,7 @@ const promises = frameworks.map(el => {
  * Виведіть на екран інформацію, з якою затримкою виконався проміс для кожного фреймфорка: `✅ ${Framework_name} fulfilled in ${delay} ms`
  * Або з якою затримкою зареджектився один із них: `❌ ${error}! ${Framework_name} rejected in ${delay} ms`
  */
-Promise.all(promises)
+/* Promise.all(promises)
   .then(data => {
     data.forEach(({ framework, delay }) => {
       console.log(`✅ ${framework} fulfilled in ${delay} ms`);
@@ -68,14 +68,28 @@ Promise.all(promises)
   })
   .catch(({ framework, delay, error }) => {
     console.log(`❌ ${error}! ${framework} rejected in ${delay} ms`);
-  });
+  }); */
 /*
  * За допомогою Promise.allSettled отримайте масив результатів.
  * Виведіть на екран інформацію, з яким результатом виконався проміс для кожного фреймфорка:
  * `✅ ${Framework_name} fulfilled in ${delay} ms`
  * `❌ ${error}! ${Framework_name} rejected in ${delay} ms`
  *
+
+
  * Приклад відповіді:
  * {status: "fulfilled", value: 99},
  * {status: "rejected", reason: Error: an error}
  */
+Promise.allSettled(promises).then(data => {
+  console.log(data);
+  data.forEach(el => {
+    if (el.status === `fulfilled`) {
+      console.log(`✅ ${el.value.framework} fulfilled in ${el.value.delay} ms`);
+    } else {
+      console.log(
+        `❌ ${el.reason.error}! ${el.reason.framework} rejected in ${el.reason.delay} ms`
+      );
+    }
+  });
+});
