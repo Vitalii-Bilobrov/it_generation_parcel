@@ -13,7 +13,7 @@ class Timer {
   constructor(selector, targetDate) {
     this.#selector = selector;
     this.#targetDate = new Date(targetDate);
-    console.log(this.#targetDate);
+
   }
   start() {
     const today = new Date();
@@ -41,7 +41,6 @@ class Timer {
     this.#refs.items = document.querySelectorAll(
       `${this.#selector} .timer__box`
     );
-    console.log(this.#refs);
   }
   #convertMs(ms) {
     // Number of milliseconds per unit of time
@@ -106,7 +105,24 @@ class Timer {
         this.#declensionNum(value, this.#datasetValues[name]);
     });
   }
+  get timerId () {
+    return this.#timerId;
+  }
 }
 
-const timer = new Timer('.timer', 'November 14, 2022 17:01:01');
-timer.start();
+
+let timer = null;
+
+const form = document.querySelector('.date');
+
+form.addEventListener('submit', onSubmitHandler)
+
+function onSubmitHandler(e) {
+  e.preventDefault();
+  if (timer) {
+    clearInterval(timer.timerId);
+  };
+  timer = new Timer('.timer', e.target.elements['date-timer'].value);
+  timer.start();
+}
+
