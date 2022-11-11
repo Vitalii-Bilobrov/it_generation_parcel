@@ -31,7 +31,7 @@ class Timer {
         if (audio) {
           audio.play();
         }
-          Notiflix.Notify.success('Happy birthday!');
+        Notiflix.Notify.success('Happy birthday!');
         return;
       }
       this.#updateValue(delta);
@@ -96,17 +96,17 @@ class Timer {
         : [2, 0, 1, 1, 1, 2][num % 10 < 5 ? num % 10 : 5]
     ];
   }
-#updateValue(delta) {
-const data = this.#convertMs(delta);
-      Object.entries(data).forEach(([name, value], idx) => {
-        this.#refs.items[idx].firstElementChild.textContent =
-          this.#addZero(value);
-        this.drawCircle(idx, value);
-        this.#refs.items[idx].firstElementChild.dataset.title =
-          this.#declensionNum(value, this.#datasetValues[name]);
-      });
+  #updateValue(delta) {
+    const data = this.#convertMs(delta);
+    Object.entries(data).forEach(([name, value], idx) => {
+      this.#refs.items[idx].firstElementChild.textContent =
+        this.#addZero(value);
+      this.drawCircle(idx, value);
+      this.#refs.items[idx].firstElementChild.dataset.title =
+        this.#declensionNum(value, this.#datasetValues[name]);
+    });
   }
 }
 
-const timer = new Timer('.timer', 'November 10, 2022 17:01:01');
+const timer = new Timer('.timer', 'November 14, 2022 17:01:01');
 timer.start();
