@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather</title>
+    <link rel="stylesheet" href="./sass/index.scss" />
+    <script type="module" src="./js/photos.js"></script>
+  </head>
+
+  <body>
+    <section class="weather">
+      <div class="container">
+        <form class="search-form js-search-form">
+          <input
+            class="search-input js-search-input"
+            type="text"
+            name="query"
+          />
+          <button class="search-btn" type="submit">пошук</button>
+        </form>
+        <ul class="photo__wrapper js-photo__wrapper gallery"></ul>
+      </div>
+    </section>
+  </body>
+</html>
