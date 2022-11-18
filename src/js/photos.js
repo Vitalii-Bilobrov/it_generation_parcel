@@ -6,6 +6,7 @@ class UnsplashApi {
   #page = 1;
   #per_page = 25;
   #query = '';
+  #total_photos = 0;
 
   getPhotos() {
     return fetch(
@@ -26,6 +27,14 @@ class UnsplashApi {
 
   set query(newQuery) {
     this.#query = newQuery;
+  }
+
+  setTotal(total) {
+    this.#total_photos = total;
+  }
+
+  morePagesExists() {
+    return this.#page < Math.ceil(this.#total_photos / this.#per_page);
   }
 }
 
@@ -51,8 +60,15 @@ function onInputSubmit(event) {
   }
   unsplashApi.query = searchValue;
   unsplashApi.getPhotos().then(data => {
+    if (data.results.length === 0) {
+      Notiflix.Notify.failure('Nothing found');
+      return;
+    }
+    unsplashApi.setTotal(data.total);
+    const haveMorePhotos = unsplashApi.morePagesExists();
+
+    console.log('haveMorePhotos:', haveMorePhotos);
     galleryEL.innerHTML = createMarkup(data.results);
-    console.log(data);
   });
 }
 
