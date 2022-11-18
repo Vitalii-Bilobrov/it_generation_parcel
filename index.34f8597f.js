@@ -1,0 +1,2 @@
+const e=e=>new Promise(((o,r)=>{const l=Math.ceil(2e3*Math.random());setTimeout((()=>{l<1500?o({delay:l,framework:e}):r({delay:l,framework:e,error:"Promise error"})}),l)})),o=["React","Vue","Angular"].map((o=>e(o)));Promise.allSettled(o).then((e=>{console.log(e),e.forEach((e=>{"fulfilled"===e.status?console.log(`✅ ${e.value.framework} fulfilled in ${e.value.delay} ms`):console.log(`❌ ${e.reason.error}! ${e.reason.framework} rejected in ${e.reason.delay} ms`)}))}));
+//# sourceMappingURL=index.34f8597f.js.map
