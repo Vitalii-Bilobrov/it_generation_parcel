@@ -3,7 +3,73 @@ import 'material-icons/iconfont/material-icons.css';
 const BASE_URL = 'https://637b70ec10a6f23f7fa8d15c.mockapi.io/';
 const refs = {
   list: document.querySelector('.contacts__list'),
+  btnEl: document.querySelector('.btn-all'),
+  btnAddContact: document.querySelector('.btn-addContact'),
+  backDropEl: document.querySelector('.backdrop'),
+  formEl: document.querySelector('.contact-form'),
+  btnClose: document.querySelector('.contact-form-close')
 };
+
+const onBtnClose = () => {
+  refs.backDropEl.classList.toggle('is-closed');
+}
+
+refs.btnClose.addEventListener('click', onBtnClose);
+
+// ======================================================
+
+const LOCAL_STORAGE_KEY = 'contact_key';
+
+function initForm() {
+  let memory = localStorage.getItem(LOCAL_STORAGE_KEY);
+
+  if (memory) {
+    memory = JSON.parse(memory);
+    Object.entries(memory).forEach(([name, value]) => {
+      refs.formEl.elements[name].value = value;
+    });
+  }
+}
+
+initForm();
+
+function handleInput(event) {
+  let savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
+  savedData = savedData ? JSON.parse(savedData) : {};
+
+  savedData[event.target.name] = event.target.value;
+
+  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(savedData));
+}
+function onSubmitForm(e) {
+  e.preventDefault();
+  const formData = new FormData(refs.formEl);
+  const userData = {};
+  formData.forEach((value, name) => {
+    userData[name] = value;
+  });
+  console.log(userData);
+
+  addContact(userData).then(initPage);
+
+  e.target.reset();
+  localStorage.removeItem(LOCAL_STORAGE_KEY);
+}
+
+refs.formEl.addEventListener('input', handleInput);
+refs.formEl.addEventListener('submit', onSubmitForm);
+
+
+// ======================================================
+
+const onBtnOpenClick = () => {
+  refs.backDropEl.classList.toggle('is-closed');
+};
+
+refs.btnAddContact.addEventListener('click', onBtnOpenClick);
+
+refs.btnEl.style.display = 'none';
+refs.btnEl.addEventListener('click',initPage);
 
 refs.list.addEventListener('click', handleClick);
 
@@ -15,10 +81,25 @@ function handleClick(e) {
   const id = item.dataset.id;
 
   if (e.target.nodeName == 'BUTTON') {
-    console.log(id);
     deleteContact(id);
     item.remove();
+    return;
   }
+
+  getContactById(id).then(contact => {
+    const markUp = createMarkup(contact);
+    refs.list.innerHTML = markUp;
+    refs.btnEl.style.display = 'block';
+  });
+}
+
+function getContactById(id) {
+    return fetch(`${BASE_URL}contacts/${id}`).then(response => {
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+    return response.json();
+  });
 }
 
 function getContscts() {
@@ -45,11 +126,30 @@ function deleteContact(id) {
     });
 }
 
-getContscts().then(data => {
+function addContact(data) {
+  return fetch(`${BASE_URL}contacts/`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(response => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      return response.json();
+    });
+}
+initPage();
+
+function initPage() {
+  getContscts().then(data => {
   const contactItems = data.map(createMarkup).join('');
 
-  refs.list.innerHTML = contactItems;
+    refs.list.innerHTML = contactItems;
+    refs.btnEl.style.display = 'none';
 });
+}
 
 function createMarkup({ id, name, createdAt, avatar, phone, email }) {
   return `<li data-id="${id}" class="col-md-6 js-contact-card">
@@ -92,4 +192,4 @@ function createMarkup({ id, name, createdAt, avatar, phone, email }) {
     </li>`;
 }
 
-// ``;
+
