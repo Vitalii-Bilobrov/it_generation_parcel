@@ -15,6 +15,32 @@
     <script type="module" src="./js/contacts/contacts.js"></script>
   </head>
   <body>
+    <button class="btn-all" type="button">All Contacts</button>
+    <button class="btn-addContact" type="button">Add contact</button>
     <ul class="contacts__list row"></ul>
+    <div class="backdrop is-closed">
+      <form class="contact-form js-contact-form">
+        <input
+          name="name"
+          type="text"
+          class="contact-form-input"
+          placeholder="Введіть ім'я"
+        />
+        <input
+          name="email"
+          type="email"
+          class="contact-form-input js-contact-email"
+          placeholder="Введіть email"
+        />
+        <input
+          name="phone"
+          type="phone"
+          class="contact-form-input js-contact-phone"
+          placeholder="Введіть телефон"
+        />
+        <button class="contact-form-submit" type="submit">submit</button>
+        <button class="contact-form-close" type="button">close</button>
+      </form>
+    </div>
   </body>
 </html>
