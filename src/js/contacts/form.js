@@ -1,6 +1,8 @@
 import { refs } from './refs';
 import { addContact } from './service/contacts_API';
 import { createMarkup } from './createMarkUp';
+import { Notify } from 'notiflix';
+import { spinnerPlay, spinnerStop } from './spinner';
 const LOCAL_STORAGE_KEY = 'contact_key';
 
 refs.btnClose.addEventListener('click', onBtnClose);
@@ -32,22 +34,26 @@ function handleInput(event) {
 
   localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(savedData));
 }
-function onSubmitForm(e) {
+async function onSubmitForm(e) {
   e.preventDefault();
   const formData = new FormData(refs.formEl);
   const userData = {};
   formData.forEach((value, name) => {
     userData[name] = value;
   });
-  console.log(userData);
 
-  addContact(userData)
-    .then(data => {
-      const markUp = createMarkup(data);
-      refs.list.insertAdjacentHTML('afterbegin', markUp);
-    })
-    .catch(error => console.log(error))
-    .finally(onBtnClose);
+  try {
+    spinnerPlay();
+    const data = await addContact(userData);
+    const markUp = createMarkup(data);
+    refs.list.insertAdjacentHTML('afterbegin', markUp);
+    Notify.success(`Add ${data.name} successfully`);
+  } catch (error) {
+    Notify.failure(error.message);
+  } finally {
+    onBtnClose();
+    spinnerStop();
+  }
 
   e.target.reset();
   localStorage.removeItem(LOCAL_STORAGE_KEY);

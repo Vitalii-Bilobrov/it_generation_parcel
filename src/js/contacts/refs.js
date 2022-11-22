@@ -5,4 +5,6 @@ export const refs = {
   backDropEl: document.querySelector('.backdrop'),
   formEl: document.querySelector('.contact-form'),
   btnClose: document.querySelector('.contact-form-close'),
+  spinnerBackdropEl: document.querySelector('.spinner-backdrop'),
+  spinnerEl: document.querySelector('#foo')
 };
