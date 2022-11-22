@@ -1,21 +1,22 @@
+import axios from 'axios';
+
+axios.defaults.baseURL = 'https://api.unsplash.com/';
+axios.defaults.headers.common['Authorization'] =
+  'Client-ID gEopSExvxGRBacvbCX5khX4G6aHTWmEvx0oJJ4DvPUk';
+
 export class UnsplashApi {
-  #API_KEY = 'gEopSExvxGRBacvbCX5khX4G6aHTWmEvx0oJJ4DvPUk';
   #page = 1;
   #per_page = 25;
   #query = '';
   #total_photos = 0;
 
-  getPhotos() {
-    return fetch(
-      `https://api.unsplash.com/search/photos?client_id=${this.#API_KEY}&page=${
-        this.#page
-      }&query=${this.#query}&per_page=${this.#per_page}`
-    ).then(response => {
-      if (!response.ok) {
-        throw new Error(response.status);
-      }
-      return response.json();
-    });
+  async getPhotos() {
+    const { data } = await axios.get(
+      `search/photos?page=${this.#page}&query=${this.#query}&per_page=${
+        this.#per_page
+      }`
+    );
+    return data;
   }
 
   get query() {

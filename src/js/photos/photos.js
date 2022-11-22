@@ -36,12 +36,14 @@ const options = {
   threshold: 1.0,
 };
 const loadMorePhotos = function (entries, observer) {
-  entries.forEach(entry => {
+  entries.forEach(async entry => {
     if (entry.isIntersecting) {
       observer.unobserve(entry.target);
       unsplashApi.incrementPage();
       spinner.spin(target);
-      unsplashApi.getPhotos().then(data => {
+
+      try {
+        const data = await unsplashApi.getPhotos();
         if (data.results.length === 0) {
           Notiflix.Notify.failure('Nothing found');
           return;
@@ -56,18 +58,18 @@ const loadMorePhotos = function (entries, observer) {
           const item = document.querySelector('.gallery__item:last-child');
           observer.observe(item);
         }
-      }).catch(() => {
-
-  }).finally(() => {
-    spinner.stop();
-  })
+      } catch (error) {
+        Notiflix.Notify.failure(error.message);
+      } finally {
+        spinner.stop();
+      }
     }
   });
 };
 
 const io = new IntersectionObserver(loadMorePhotos, options);
 
-function onInputSubmit(event) {
+async function onInputSubmit(event) {
   event.preventDefault();
   const {
     elements: { query },
@@ -76,12 +78,15 @@ function onInputSubmit(event) {
   if (!searchValue) {
     return Notiflix.Notify.failure('Input word');
   }
+
   unsplashApi.resetPage();
   refs.galleryEL.innerHTML = '';
 
   unsplashApi.query = searchValue;
   spinner.spin(target);
-  unsplashApi.getPhotos().then(data => {
+
+  try {
+    const data = await unsplashApi.getPhotos();
     if (data.results.length === 0) {
       Notiflix.Notify.failure('Nothing found');
       return;
@@ -94,15 +99,13 @@ function onInputSubmit(event) {
       const item = document.querySelector('.gallery__item:last-child');
       io.observe(item);
     }
-  }).catch(() => {
-
-  }).finally(() => {
+  } catch (error) {
+    Notiflix.Notify.failure(error.message);
+  } finally {
     spinner.stop();
-  })
+  }
+
   event.target.reset();
 }
 
 refs.formEl.addEventListener('submit', onInputSubmit);
-
-
-
